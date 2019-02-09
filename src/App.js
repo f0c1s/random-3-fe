@@ -15,7 +15,7 @@ class App extends Component {
     }
     onCreateGrid(dimensions) {
         this.setState({ gridDimensions: dimensions })
-        this.createRandomMushrooms()
+        // this.createRandomMushrooms()
     }
 
     render() {

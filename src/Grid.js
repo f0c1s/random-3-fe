@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './grid.css'
 import ArrowKeysReact from 'arrow-keys-react'
-
+import Moves from './Moves'
 export default class Grid extends Component {
     constructor(props) {
         super(props)
@@ -182,9 +182,7 @@ export default class Grid extends Component {
         return (
             <div id="grid" {...ArrowKeysReact.events} tabIndex="1">
                 {createGrid()}
-                {
-                    this.state.moves > 0 && this.state.moves + " moves"
-                }
+                <Moves moves={this.state.moves} />
             </div>
         )
     }
