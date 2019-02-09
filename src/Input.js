@@ -31,13 +31,13 @@ export default class Input extends Component {
                     <label htmlFor="height">
                         Height:
                     </label>
-                    <input type="text" id="height" name="height" onChange={this.handleHeightChange} />
+                    <input type="text" id="height" name="height" value={this.state.height} onChange={this.handleHeightChange} />
                 </div>
                 <div id="widthInputBox">
                     <label htmlFor="width">
                         Width:
                     </label>
-                    <input type="text" id="width" name="width" onChange={this.handleWidthChange} />
+                    <input type="text" id="width" name="width" value={this.state.width} onChange={this.handleWidthChange} />
                 </div>
                 <div id="createGridButtonBox">
                     <button id="createGridButton" onClick={this.createGrid}>Create grid</button>
