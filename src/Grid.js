@@ -63,13 +63,19 @@ export default class Grid extends Component {
     }
     moveMario() {
         if (this.state.direction) {
+            let bounced = false
             if (this.shouldBounce(this.state.mario.prev.x, this.state.mario.prev.y)) {
                 console.log('bouncing mario')
                 this.changeDirection()
+                bounced = true
             }
             console.log('move mario')
             const next = this.nextMarioLocation()
-            this.setState({ mario: { next: next, prev: this.state.mario.next } })
+            if(!bounced) {
+                this.setState({ mario: { next: next, prev: this.state.mario.next } })
+            } else {
+                this.setState({ mario: { next: next, prev: this.state.mario.prev } })
+            }
             this.forceUpdate()
         }
     }
@@ -98,13 +104,13 @@ export default class Grid extends Component {
         if(x === 0 && this.state.direction === 'l') {
             return true
         }
-        if(x === this.state.width && this.state.direction === 'r') {
+        if(x === this.state.width -1 && this.state.direction === 'r') {
             return true
         }
-        if(y === 0 && this.state.direction === 'l') {
+        if(y === 0 && this.state.direction === 'u') {
             return true
         }
-        if(y === this.state.height && this.state.direction === 'r') {
+        if(y === this.state.height -1 && this.state.direction === 'd') {
             return true
         }
         return false
