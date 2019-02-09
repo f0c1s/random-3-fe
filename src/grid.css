@@ -1,0 +1,14 @@
+#grid {
+    margin: 1em 0;
+}
+
+.grid-item {
+    border: 1px solid black;
+    padding: 0;
+    height: 1em;
+    width: 1em;
+    display: inline-block;
+    line-height: 0;
+    font-size: 1.4em;
+    vertical-align: top;
+}

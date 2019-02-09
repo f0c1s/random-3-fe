@@ -1,0 +1,21 @@
+#gridForm {
+    border-bottom: thin solid #333;
+    padding-bottom: 1em;
+}
+
+#gridForm label {
+    display: inline-block;
+    width: 100px;
+}
+
+#gridForm input {
+    display: inline-block;
+    height: 30px;
+    font-size: 1em;
+}
+
+#heightInputBox,
+#widthInputBox,
+#createGridButtonBox {
+    margin: .5em;
+}
