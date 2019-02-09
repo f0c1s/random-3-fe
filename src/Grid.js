@@ -7,38 +7,55 @@ export default class Grid extends Component {
         this.state = {
             height: this.props.dimensions.height,
             width: this.props.dimensions.width,
-            mushrooms: [],
-            direction: null,
-            grid: []
+            mushrooms: this.props.mushrooms,
+            direction: null
         }
         this.moveMario = this.moveMario.bind(this)
-        this.createGrid = this.createGrid.bind(this)
+        this.includes = this.includes.bind(this)
     }
 
     static getDerivedStateFromProps(props, state) {
-        return { height: props.dimensions.height, width: props.dimensions.width }
+        return { height: props.dimensions.height, width: props.dimensions.width, mushroom: props.mushrooms }
     }
     moveMario() {
     }
-    createGrid() {
-        console.log('calling createGrid()')
-        console.log(`height: ${this.state.height}, width: ${this.state.width}`)
-        const item = key => <div key={key} className="grid-item"></div>
-        const libr = <br />
-        const grid = []
-        for (let i = 0; i < this.state.height; i++) {
-            grid[i] = []
-            for (let j = 0; j < this.state.width; j++) {
-                grid[i].push(item(`${i}-${j}`))
+    setupGrid() {
+        const grid = new Array(this.state.height).fill(0).map(_ => new Array(this.state.width).fill(0))
+        this.setState({ grid: grid })
+    }
+    includes(x, y) {
+        if (this.props.mushrooms[0]) {
+            console.log(this.props.mushrooms[0])
+            for (let i = 0; i < this.state.width; i++) {
+                if (this.props.mushrooms[i].x === x && this.props.mushrooms[i].y === y) {
+                    return true
+                }
             }
-            grid[i].push(libr)
         }
-        return grid
+        return false
     }
     render() {
+        const createGrid = () => {
+            const item = (key, maybeMushroom, classess = "grid-item") => <div key={key} className={classess + (maybeMushroom ? " hasMushroom" : "")}></div>
+            const libr = key => <br key={key} />
+            const grid = []
+            for (let i = 0; i < this.state.height; i++) {
+                grid[i] = [] // visual grid
+                for (let j = 0; j < this.state.width; j++) {
+                    if (i === 0 && j === 0) {
+                        grid[i].push(item(`${i}-${j}`, false, "grid-item mario"))
+                    } else {
+                        const hasMushroom = this.includes(j, i)
+                        grid[i].push(item(`${i}-${j}`, hasMushroom))
+                    }
+                }
+                grid[i].push(libr(i))
+            }
+            return grid
+        }
         return (
             <div id="grid">
-                {this.createGrid()}
+                {createGrid()}
             </div>
         )
     }

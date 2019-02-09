@@ -12,3 +12,12 @@
     font-size: 1.4em;
     vertical-align: top;
 }
+
+.hasMushroom,
+.mushroom {
+    background-color: black;
+}
+
+.mario {
+    background-color: red;
+}
