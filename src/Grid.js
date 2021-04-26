@@ -1,189 +1,210 @@
-import React, { Component } from 'react'
-import './grid.css'
-import ArrowKeysReact from 'arrow-keys-react'
-import Moves from './Moves'
+import React, {Component} from 'react';
+import './grid.css';
+import ArrowKeysReact from 'arrow-keys-react';
+import Moves from './Moves';
+import {Container, Row, Col} from "react-bootstrap";
+
 export default class Grid extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            height: this.props.dimensions.height,
-            width: this.props.dimensions.width,
+            height: this.props.gridDimensions.height,
+            width: this.props.gridDimensions.width,
             mushrooms: [],
             direction: null,
             timer: null,
             mario: {
-                next: { x: 0, y: 0 },
-                prev: { x: 0, y: 0 }
+                next: {x: 0, y: 0},
+                prev: {x: 0, y: 0}
             },
             moves: 0
-        }
-        this.moveMario = this.moveMario.bind(this)
-        this.includes = this.includes.bind(this)
-        this.moveMario = this.moveMario.bind(this)
-        this.shouldBounce = this.shouldBounce.bind(this)
-        this.changeDirection = this.changeDirection.bind(this)
-        this.nextMarioLocation = this.nextMarioLocation.bind(this)
-        this.createRandomMushrooms = this.createRandomMushrooms.bind(this)
+        };
+        this.moveMario = this.moveMario.bind(this);
+        this.includes = this.includes.bind(this);
+        this.moveMario = this.moveMario.bind(this);
+        this.shouldBounce = this.shouldBounce.bind(this);
+        this.changeDirection = this.changeDirection.bind(this);
+        this.nextMarioLocation = this.nextMarioLocation.bind(this);
+        this.createRandomMushrooms = this.createRandomMushrooms.bind(this);
         ArrowKeysReact.config({
             left: () => {
-                console.log('going left')
+                console.log('going left');
                 this.setState({
                     direction: 'l'
                 });
             },
             right: () => {
-                console.log('going right')
+                console.log('going right');
                 this.setState({
                     direction: 'r'
                 });
             },
             up: () => {
-                console.log('going up')
+                console.log('going up');
                 this.setState({
                     direction: 'u'
                 });
             },
             down: () => {
-                console.log('going down')
+                console.log('going down');
                 this.setState({
                     direction: 'd'
                 });
             }
-        })
+        });
     }
-    componentDidMount() {
-        this.createRandomMushrooms()
-        const timer = setInterval(() => {
-            this.moveMario()
-        }, 100)
-        this.setState({ timer: timer })
-    }
-    componentWillUnmount() {
-        clearInterval(this.state.timer)
-    }
+
     static getDerivedStateFromProps(props, state) {
-        return { height: props.dimensions.height, width: props.dimensions.width, mushroom: props.mushrooms }
+        return {height: props.gridDimensions.height, width: props.gridDimensions.width, mushroom: props.mushrooms};
     }
+
+    componentDidMount() {
+        this.createRandomMushrooms();
+        const timer = setInterval(() => {
+            this.moveMario();
+        }, 100);
+        this.setState({timer: timer});
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.timer);
+    }
+
     createRandomMushrooms() {
-        let shrooms = []
-        for (let i = 0; i < 10; i++) {
-            const x = Math.floor(Math.random() * this.state.width)
-            const y = Math.floor(Math.random() * this.state.height)
-            shrooms.push({ x, y })
+        let shrooms = [];
+        for (let i = 0; i < Math.max(this.state.height, this.state.width); i++) {
+            const x = Math.floor(Math.random() * this.state.width);
+            const y = Math.floor(Math.random() * this.state.height);
+            shrooms.push({x, y});
         }
-        this.setState({ mushrooms: shrooms })
+        this.setState({mushrooms: shrooms});
     }
+
     moveMario() {
-        if(this.state.mushrooms.length === 0) {
-            clearInterval(this.state.timer)
+        if (this.state.mushrooms.length === 0) {
+            clearInterval(this.state.timer);
         }
         if (this.state.direction) {
-            let bounced = false
+            let bounced = false;
             if (this.shouldBounce(this.state.mario.prev.x, this.state.mario.prev.y)) {
-                console.log('bouncing mario')
-                this.changeDirection()
-                bounced = true
+                console.log('bouncing mario');
+                this.changeDirection();
+                bounced = true;
             }
-            console.log('move mario')
-            const next = this.nextMarioLocation()
+            console.log('move mario');
+            const next = this.nextMarioLocation();
             if (!bounced) {
-                this.setState({ mario: { next: next, prev: this.state.mario.next } })
+                this.setState({mario: {next: next, prev: this.state.mario.next}});
             } else {
-                this.setState({ mario: { next: next, prev: this.state.mario.prev } })
+                this.setState({mario: {next: next, prev: this.state.mario.prev}});
             }
-            const newMushrooms = this.state.mushrooms.filter(m => !(m.x === next.x && m.y === next.y))
-            this.setState({ mushrooms: newMushrooms, moves: this.state.moves + 1 })
-            this.forceUpdate()
+            const newMushrooms = this.state.mushrooms.filter(m => !(m.x === next.x && m.y === next.y));
+            this.setState({mushrooms: newMushrooms, moves: this.state.moves + 1});
+            this.forceUpdate();
         }
     }
+
     nextMarioLocation() {
-        console.log(this.state.direction)
+        console.log(this.state.direction);
         if (this.state.direction === 'l') {
-            return { x: this.state.mario.prev.x - 1, y: this.state.mario.next.y }
+            return {x: this.state.mario.prev.x - 1, y: this.state.mario.next.y};
         } else if (this.state.direction === 'r') {
-            return { x: this.state.mario.prev.x + 1, y: this.state.mario.next.y }
+            return {x: this.state.mario.prev.x + 1, y: this.state.mario.next.y};
         } else if (this.state.direction === 'u') {
-            return { x: this.state.mario.next.x, y: this.state.mario.prev.y - 1 }
+            return {x: this.state.mario.next.x, y: this.state.mario.prev.y - 1};
         } else if (this.state.direction === 'd') {
-            return { x: this.state.mario.next.x, y: this.state.mario.prev.y + 1 }
+            return {x: this.state.mario.next.x, y: this.state.mario.prev.y + 1};
         } else {
-            return { x: this.state.mario.prev.x, y: this.state.mario.prev.y }
+            return {x: this.state.mario.prev.x, y: this.state.mario.prev.y};
         }
     }
 
     shouldBounce(x, y) {
         if (x === 0 && y === 0 && (this.state.direction === 'u' || this.state.direction === 'l')) {
-            return true
+            return true;
         }
         if (x === this.state.width && y === this.state.height && (this.state.direction === 'd' || this.state.direction === 'r')) {
-            return true
+            return true;
         }
         if (x === 0 && this.state.direction === 'l') {
-            return true
+            return true;
         }
         if (x === this.state.width - 1 && this.state.direction === 'r') {
-            return true
+            return true;
         }
         if (y === 0 && this.state.direction === 'u') {
-            return true
+            return true;
         }
         if (y === this.state.height - 1 && this.state.direction === 'd') {
-            return true
+            return true;
         }
-        return false
+        return false;
     }
+
     changeDirection() {
-        console.log(`from ${this.state.direction}`)
+        console.log(`from ${this.state.direction}`);
         if (this.state.direction === 'l') {
-            this.setState({ direction: 'r' })
+            this.setState({direction: 'r'});
         } else if (this.state.direction === 'r') {
-            this.setState({ direction: 'l' })
+            this.setState({direction: 'l'});
         } else if (this.state.direction === 'u') {
-            this.setState({ direction: 'd' })
+            this.setState({direction: 'd'});
         } else {
-            this.setState({ direction: 'u' })
+            this.setState({direction: 'u'});
         }
-        console.log(`to ${this.state.direction}`)
+        console.log(`to ${this.state.direction}`);
     }
+
     setupGrid() {
-        const grid = new Array(this.state.height).fill(0).map(_ => new Array(this.state.width).fill(0))
-        this.setState({ grid: grid })
+        const grid = new Array(this.state.height).fill(0).map(_ => new Array(this.state.width).fill(0));
+        this.setState({grid: grid});
     }
+
     includes(x, y) {
         if (this.state.mushrooms[0]) {
             for (let i = 0; i < this.state.width; i++) {
                 if (this.state.mushrooms[i] && this.state.mushrooms[i].x === x && this.state.mushrooms[i].y === y) {
-                    return true
+                    return true;
                 }
             }
         }
-        return false
+        return false;
     }
+
     render() {
         const createGrid = () => {
-            const item = (key, maybeMushroom, classess = "grid-item") => <div key={key} className={classess + (maybeMushroom ? " hasMushroom" : "")}></div>
-            const libr = key => <br key={key} />
-            const grid = []
+            const item = (key, maybeMushroom, classess = "grid-item") => (
+                <div key={key} className={classess + (maybeMushroom ? " hasMushroom" : "")}></div>
+            );
+            const libr = key => <br key={key}/>;
+            const grid = [];
             for (let i = 0; i < this.state.height; i++) {
-                grid[i] = [] // visual grid
+                grid[i] = []; // visual grid
                 for (let j = 0; j < this.state.width; j++) {
-                    const isMarioThere = i === this.state.mario.next.y && j === this.state.mario.next.x
+                    const isMarioThere = i === this.state.mario.next.y && j === this.state.mario.next.x;
+                    const key = `row-${i}-col-${j}-grid`;
                     if (isMarioThere) {
-                        grid[i].push(item(`${i}-${j}`, false, "grid-item mario"))
+                        grid[i].push(item(key, false, "grid-item mario"));
                     } else {
-                        const hasMushroom = this.includes(j, i) && !isMarioThere
-                        grid[i].push(item(`${i}-${j}`, hasMushroom))
+                        const hasMushroom = this.includes(j, i) && !isMarioThere;
+                        grid[i].push(item(key, hasMushroom));
                     }
                 }
-                grid[i].push(libr(i))
+                grid[i].push(libr(`row-${i}-libr`));
             }
-            return grid
-        }
+            return grid;
+        };
         return (
-            <div id="grid" {...ArrowKeysReact.events} tabIndex="1">
-                {createGrid()}
-                <Moves moves={this.state.moves} />
-            </div>
-        )
+            <Container fluid>
+                <Row>
+                    <Col>
+                        <div id="grid" {...ArrowKeysReact.events} tabIndex="1">
+                            {createGrid()}
+                            <Moves moves={this.state.moves}/>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
+        );
     }
 }

@@ -1,48 +1,39 @@
-import React, { Component } from 'react'
-import './input.css'
+import React, {useState} from 'react';
+import './input.css';
+import {Col, Container, Form, FormControl, FormGroup, FormLabel, FormText, Row} from "react-bootstrap";
 
-export default class Input extends Component {
-    constructor(props) {
-        super(props)
+function Input(props) {
+    const [height, setHeight] = useState(props.gridDimensions.height);
+    const [width, setWidth] = useState(props.gridDimensions.width);
 
-        this.state = {
-            height: 10,
-            width: 10
-        }
+    function sendBack() {
+        props.setGridDimensions({height, width});
+    }
 
-        this.createGrid = this.createGrid.bind(this)
-        this.handleWidthChange = this.handleWidthChange.bind(this)
-        this.handleHeightChange = this.handleHeightChange.bind(this)
-    }
-    createGrid(e) {
-        e.preventDefault()
-        this.props.onCreateGrid(this.state)
-    }
-    handleHeightChange(e) {
-        this.setState({ height: e.target.value })
-    }
-    handleWidthChange(e) {
-        this.setState({ width: e.target.value })
-    }
-    render() {
-        return (
-            <form id="gridForm">
-                <div id="heightInputBox">
-                    <label htmlFor="height">
-                        Height:
-                    </label>
-                    <input type="text" id="height" name="height" value={this.state.height} onChange={this.handleHeightChange} />
-                </div>
-                <div id="widthInputBox">
-                    <label htmlFor="width">
-                        Width:
-                    </label>
-                    <input type="text" id="width" name="width" value={this.state.width} onChange={this.handleWidthChange} />
-                </div>
-                <div id="createGridButtonBox">
-                    <button id="createGridButton" onClick={this.createGrid}>Create grid</button>
-                </div>
-            </form>
-        )
-    }
+    return (
+        <Container fluid>
+            <Row>
+                <Col>
+                    <Form inline>
+                        <FormGroup style={{margin: "1em"}}>
+                            <FormLabel>Width ({width})</FormLabel>
+                            <FormControl type="range" min={4} max={16} placeholder={"width"} onChange={(e) => {
+                                setWidth(e.target.value);
+                                sendBack();
+                            }}/>
+                        </FormGroup>
+                        <FormGroup style={{margin: "1em"}}>
+                            <FormLabel>Height ({height})</FormLabel>
+                            <FormControl type="range" min={4} max={16} placeholder={"height"} onChange={(e) => {
+                                setHeight(e.target.value);
+                                sendBack();
+                            }}/>
+                        </FormGroup>
+                    </Form>
+                </Col>
+            </Row>
+        </Container>
+    );
 }
+
+export default Input;

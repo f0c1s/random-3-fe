@@ -1,14 +1,15 @@
-import React, { Component } from 'react'
+import React from 'react';
+import {Badge} from "react-bootstrap";
 
-export default class Moves extends Component {
-    render() {
-        const moves = this.props.moves
-        return (
-            <div>
-                {
-                    moves > 0 && moves + " moves"
-                }
-            </div>
-        )
-    }
+function Moves(props) {
+    const moves = props.moves;
+    return (
+        <Badge variant={"success"}>
+            {
+                moves > 0 && moves + " moves"
+            }
+        </Badge>
+    );
 }
+
+export default Moves;

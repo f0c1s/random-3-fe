@@ -1,39 +1,35 @@
-import React, { Component } from 'react'
-import logo from './logo.svg'
-import './App.css'
-import Input from './Input'
-import Grid from './Grid'
+import React, {useEffect, useState} from 'react';
+import './App.css';
+import Input from './Input';
+import Grid from './Grid';
+import {Container, Row, Col, Button} from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-class App extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            gridDimensions: { height: 10, width: 10 },
-            marioPosition: { x: 0, y: 0 }
-        }
-        this.onCreateGrid = this.onCreateGrid.bind(this)
-    }
-    onCreateGrid(dimensions) {
-        this.setState({ gridDimensions: dimensions })
-        // this.createRandomMushrooms()
-    }
-
-    render() {
-        return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                </header>
-                <section className="App-content">
-                    <Input onCreateGrid={this.onCreateGrid} />
-                    <Grid dimensions={this.state.gridDimensions} />
-                </section>
-                {/* <footer className="App-footer">
-                    <img src={logo} className="App-logo" alt="logo" />
-                </footer> */}
-            </div>
-        )
-    }
+function App() {
+    const [gridDimensions, setGridDimensions] = useState({height: 10, width: 10});
+    
+    return (
+        <Container fluid className="App">
+            <Row>
+                <Col>
+                    <header className="App-header">
+                        <h1>Mario?</h1>
+                        <h6>It goes brrr...</h6>
+                    </header>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Input setGridDimensions={setGridDimensions} gridDimensions={gridDimensions}/>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Grid gridDimensions={gridDimensions}/>
+                </Col>
+            </Row>
+        </Container>
+    );
 }
 
-export default App
+export default App;
