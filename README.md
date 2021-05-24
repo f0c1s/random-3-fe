@@ -3,13 +3,13 @@
 ## setup
 
 ```bash
-    yarn install
+npm i
 ```
 
 ## Application
 
 ```bash
-    yarn start
+npm run start
 ```
 
 ## GUI
